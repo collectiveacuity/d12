@@ -1,7 +1,15 @@
 #################   .npmignore    #################
-
-.idea
-.git
+.idea/
+.git/
 *.swp
 npm-debug.log
-node_modules
+.hg/
+dev/
+docs/
+docs_dev/
+test/
+test_dev/
+.babelrc
+.gitignore
+.hgignore
+package-lock.json
