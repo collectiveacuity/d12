@@ -1,10 +1,25 @@
+<a href="https://www.npmjs.com/package/d12"><img alt="version" src="https://img.shields.io/npm/v/d12.svg"> <a href="https://www.npmjs.com/package/d12"><img alt="license" src="https://img.shields.io/npm/l/d12.svg">
+
 # D12
 _A Platonic Solid for Ideal Data_  
 **by [Collective Acuity](https://collectiveacuity.com)**
 
+<table>
+<tr><td>Downloads:</td><td>https://www.npmjs.com/package/d12</td></tr>
+<tr><td>Source:</td><td>https://github.com/collectiveacuity/d12</td><tr>
+<tr><td>Documentation:</td><td>TBD</td><tr>
+</table>
+
 Intro
 -----
-d12 is a javascript package for data ingestion and validation. d12 extends the methods in lodash to tackle the evaluation of more complex data structures in order to reduce code verbosity and make input type validation easier.
+d12 is a javascript package for data ingestion and validation. d12 extends the methods in lodash to tackle the evaluation of more complex data structures in order to reduce code verbosity and make input validation easier.
+
+## Installation
+
+Using npm:
+```bash
+npm install d12
+```
 
 Usage
 -----
