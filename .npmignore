@@ -1,0 +1,7 @@
+#################   .npmignore    #################
+
+.idea
+.git
+*.swp
+npm-debug.log
+node_modules

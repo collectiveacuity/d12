@@ -1,0 +1,25 @@
+#################   .gitignore    #################
+
+#################  dependencies   #################
+node_modules/
+package-lock.json
+
+################# version control #################
+.hgignore
+.hg/
+dev/
+test_dev/
+docs_dev/
+
+#################    IDE files    #################
+.idea
+.node_history
+__pycache__
+venv/
+venv3/
+
+#################   backup sync   #################
+desktop.ini
+*.gdoc
+.dropbox
+Thumbs.db

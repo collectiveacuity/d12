@@ -1,0 +1,41 @@
+{
+  "name": "d12",
+  "version": "0.0.1",
+  "description": "A Collection of Methods for Data Manipulation",
+  "author": "Collective Acuity <support@collectiveacuity",
+  "contributors": [
+    {
+      "name": "rcj1492"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/collectiveacuity/d12/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/collectiveacuity/d12"
+  },
+  "homepage": "https://github.com/collectiveacuity/d12",
+  "dependencies": {
+    "lodash": "^4.17.10"
+  },
+  "license": "MIT",
+  "main": "dist/d12.js",
+  "scripts": {
+    "test": "mocha --require @babel/register test",
+    "build": "babel src --presets @babel/preset-env -o dist/d12.js; terser dist/d12.js -m --comments /@license/ -o dist/d12.min.js",
+    "prepare": "npm run build",
+    "testdev": "mocha --require @babel/register test_dev"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "terser": "^3.8.2"
+  }
+}
