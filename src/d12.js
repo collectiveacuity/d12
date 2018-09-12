@@ -1,12 +1,3 @@
-/*
- * D12 JAVASCRIPT MODULE
- * @description A Collection of Methods for Data Manipulation
- * @author rcj1492
- * @license MIT
- * @version 0.0.1
- * @email support@collectiveacuity.com
- */
-
 // import dependencies
 import _ from 'lodash'
 
@@ -14,27 +5,61 @@ export function ingestObject (obj) {
   
   /* a method to ensure a plain object output */
   
-  let empty_map = new Object.constructor(null);
-  if (obj === null || typeof (obj) === 'undefined') {
-    return empty_map
-  } else if (!_.isPlainObject(obj)) {
-    return empty_map
-  }
-  return obj
+  return _.isPlainObject(obj) ? obj : new Object.constructor(null)
+  
+}
+
+export function ingestString (obj) {
+  
+  /* a method to ensure a string output */
+  
+  return _.isString(obj) ? obj : ''
+  
+}
+
+export function ingestBoolean (obj) {
+
+  /* a method to ensure a boolean output */
+  
+  return _.isBoolean(obj) ? obj : false
+  
+}
+
+export function ingestArray (obj) {
+  
+  /* a method to ensure an array output */
+  
+  return _.isArray(obj) ? obj : []
+  
+}
+
+export function ingestInteger (obj) {
+  
+  /* a method to ensure an integer output */
+  
+  return _.isInteger(obj) ? obj : 0
+  
+}
+
+export function ingestNumber (obj) {
+  
+  /* a method to ensure an integer output */
+  
+  return _.isNumber(obj) ? obj : 0
   
 }
 
 export function objectSize (obj) {
   
-  /* a method to determine number of keys in plain object */
+  /* a method to determine number of keys in a plain object */
   
-  return Object.keys(obj).length;
+  return Object.keys(ingestObject(obj)).length;
   
 }
   
 export function ingestOptions (options, defaults) {
   
-  /* a method to merge an object of options into an object of defaults */
+  /* a recursive method to merge an object of options into an object of defaults */
   
   // verify input is a map
   options = ingestObject(options);
@@ -50,13 +75,7 @@ export function ingestOptions (options, defaults) {
       for (let key in defs) {
         if (key in opts) {
           if (typeof (opts[key]) === typeof (defs[key])) {
-            if (_.isFunction(defs[key])) {
-              if (_.isFunction(opts[key])) {
-                output[key] = opts[key]
-              } else {
-                output[key] = defs[key]
-              }
-            } else if (_.isArray(opts[key])) {
+            if (_.isArray(opts[key])) {
               output[key] = _ingest_array(opts[key], defs[key])
             } else if (_.isPlainObject(opts[key])) {
               output[key] = _ingest_map(opts[key], defs[key])
@@ -84,11 +103,7 @@ export function ingestOptions (options, defaults) {
         output.push(opts)
       } else {
         if (typeof (opts[i]) === typeof (item)) {
-          if (isFunction(item)) {
-            if (isFunction(opts[i])) {
-              output.push(opts[i])
-            }
-          } else if (_.isArray(opts[i])) {
+          if (_.isArray(opts[i])) {
             output.push(_ingest_array(opts[i], item))
           } else if (_.isPlainObject(opts[i])) {
             output.push(_ingest_map(opts[i], item))

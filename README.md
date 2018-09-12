@@ -1,5 +1,5 @@
 # D12
-_A Collection of Methods for Data Manipulation_
+_A Collection of Methods for Data Manipulation_  
 **by [Collective Acuity](https://collectiveacuity.com)**
 
 Usage
@@ -26,7 +26,7 @@ let defaults = {
   dt: 0.0,
   timeout: 9000,
   method: 'header',
-  offline: 'reject'
+  offline: false
 }
 console.log(ingestOptions(options, defaults))
 // { 
@@ -34,7 +34,7 @@ console.log(ingestOptions(options, defaults))
 //   dt: 1123456789.012, 
 //   timeout: 9000, 
 //   method: 'header', 
-//   offline: 'reject' 
+//   offline: false 
 // }
 ```
 
