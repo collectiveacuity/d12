@@ -1,6 +1,10 @@
 # D12
-_A Collection of Methods for Data Manipulation_  
+_A Platonic Solid for Ideal Data_  
 **by [Collective Acuity](https://collectiveacuity.com)**
+
+Intro
+-----
+d12 is a javascript package for data ingestion and validation. d12 extends the methods in lodash to tackle the evaluation of more complex data structures in order to reduce code verbosity and make input type validation easier.
 
 Usage
 -----

@@ -59,7 +59,15 @@ export function objectSize (obj) {
   
 export function ingestOptions (options, defaults) {
   
-  /* a recursive method to merge an object of options into an object of defaults */
+  /* a recursive method to merge an object of options into an object of defaults 
+  * 
+  * NOTE:
+  * the ingestion process preserves the scope and type of the keys in defaults
+  * and can recursively explore nested objects and arrays. an empty array in defaults
+  * will add items from the corresponding key in options, otherwise it will only add 
+  * items whose value matches the datatype of the first item declared in defaults.
+  * no items declared in an array in defaults will be added to the output.
+  * */
   
   // verify input is a map
   options = ingestObject(options);

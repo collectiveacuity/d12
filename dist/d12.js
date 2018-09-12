@@ -1,9 +1,10 @@
 /**
 * D12 JAVASCRIPT MODULE
-* @description A Collection of Methods for Data Manipulation
+* @description A Platonic Solid for Ideal Data
 * @author rcj1492
 * @license MIT
 * @version 0.0.1
+* @copyright 2018 Collective Acuity 
 * @email support@collectiveacuity.com
 **/
 "use strict";
@@ -13,6 +14,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ingestObject = ingestObject;
+exports.ingestString = ingestString;
+exports.ingestBoolean = ingestBoolean;
+exports.ingestArray = ingestArray;
+exports.ingestInteger = ingestInteger;
+exports.ingestNumber = ingestNumber;
 exports.objectSize = objectSize;
 exports.ingestOptions = ingestOptions;
 
@@ -24,24 +30,49 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function ingestObject(obj) {
   /* a method to ensure a plain object output */
-  var empty_map = new Object.constructor(null);
+  return _lodash.default.isPlainObject(obj) ? obj : new Object.constructor(null);
+}
 
-  if (obj === null || typeof obj === 'undefined') {
-    return empty_map;
-  } else if (!_lodash.default.isPlainObject(obj)) {
-    return empty_map;
-  }
+function ingestString(obj) {
+  /* a method to ensure a string output */
+  return _lodash.default.isString(obj) ? obj : '';
+}
 
-  return obj;
+function ingestBoolean(obj) {
+  /* a method to ensure a boolean output */
+  return _lodash.default.isBoolean(obj) ? obj : false;
+}
+
+function ingestArray(obj) {
+  /* a method to ensure an array output */
+  return _lodash.default.isArray(obj) ? obj : [];
+}
+
+function ingestInteger(obj) {
+  /* a method to ensure an integer output */
+  return _lodash.default.isInteger(obj) ? obj : 0;
+}
+
+function ingestNumber(obj) {
+  /* a method to ensure an integer output */
+  return _lodash.default.isNumber(obj) ? obj : 0;
 }
 
 function objectSize(obj) {
-  /* a method to determine number of keys in plain object */
-  return Object.keys(obj).length;
+  /* a method to determine number of keys in a plain object */
+  return Object.keys(ingestObject(obj)).length;
 }
 
 function ingestOptions(options, defaults) {
-  /* a recursive method to merge an object of options into an object of defaults */
+  /* a recursive method to merge an object of options into an object of defaults 
+  * 
+  * NOTE:
+  * the ingestion process preserves the scope and type of the keys in defaults
+  * and can recursively explore nested objects and arrays. an empty array in defaults
+  * will add items from the corresponding key in options, otherwise it will only add 
+  * items whose value matches the datatype of the first item declared in defaults.
+  * no items declared in an array in defaults will be added to the output.
+  * */
   // verify input is a map
   options = ingestObject(options); // define ingest map helper function
 
@@ -56,13 +87,7 @@ function ingestOptions(options, defaults) {
       for (var key in defs) {
         if (key in opts) {
           if (_typeof(opts[key]) === _typeof(defs[key])) {
-            if (_lodash.default.isFunction(defs[key])) {
-              if (_lodash.default.isFunction(opts[key])) {
-                output[key] = opts[key];
-              } else {
-                output[key] = defs[key];
-              }
-            } else if (_lodash.default.isArray(opts[key])) {
+            if (_lodash.default.isArray(opts[key])) {
               output[key] = _ingest_array(opts[key], defs[key]);
             } else if (_lodash.default.isPlainObject(opts[key])) {
               output[key] = _ingest_map(opts[key], defs[key]);
@@ -95,11 +120,7 @@ function ingestOptions(options, defaults) {
         output.push(opts);
       } else {
         if (_typeof(opts[i]) === _typeof(item)) {
-          if (isFunction(item)) {
-            if (isFunction(opts[i])) {
-              output.push(opts[i]);
-            }
-          } else if (_lodash.default.isArray(opts[i])) {
+          if (_lodash.default.isArray(opts[i])) {
             output.push(_ingest_array(opts[i], item));
           } else if (_lodash.default.isPlainObject(opts[i])) {
             output.push(_ingest_map(opts[i], item));
