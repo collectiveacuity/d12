@@ -22,10 +22,11 @@
   "license": "MIT",
   "main": "dist/d12.js",
   "scripts": {
-    "test": "mocha --require @babel/register test",
+    "test": "nyc --reporter=html --reporter=text mocha --require @babel/register test",
     "build": "babel src --presets @babel/preset-env -o dist/d12.js; terser dist/d12.js -m --comments /@license/ -o dist/d12.min.js",
     "prepare": "npm run build",
-    "testdev": "mocha --require @babel/register test_dev"
+    "testdev": "mocha --require @babel/register test_dev",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -35,7 +36,9 @@
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.2",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
     "terser": "^3.8.2"
   }
 }

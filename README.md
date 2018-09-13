@@ -1,4 +1,6 @@
-<a href="https://www.npmjs.com/package/d12"><img alt="version" src="https://img.shields.io/npm/v/d12.svg"> <a href="https://www.npmjs.com/package/d12"><img alt="license" src="https://img.shields.io/npm/l/d12.svg">
+<a href="https://www.npmjs.com/package/d12"><img alt="version" src="https://img.shields.io/npm/v/d12.svg"></a> 
+<a href="https://www.npmjs.com/package/d12"><img alt="license" src="https://img.shields.io/npm/l/d12.svg"></a>
+<a href="https://www.npmjs.com/package/d12"><img src="https://img.shields.io/codecov/c/github/collectiveacuity/d12.svg"></a>
 
 # D12
 _A Platonic Solid for Ideal Data_  

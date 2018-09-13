@@ -17,6 +17,7 @@ docs_dev/
 __pycache__
 venv/
 venv3/
+.nyc_output/
 
 #################   backup sync   #################
 desktop.ini

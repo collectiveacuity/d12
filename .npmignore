@@ -9,6 +9,8 @@ docs/
 docs_dev/
 test/
 test_dev/
+coverage/
+.nyc_output/
 .babelrc
 .gitignore
 .hgignore

@@ -27,7 +27,8 @@ let options = {
   },
   func: d12.ingestArray,
   list: [ 'me', 'you', true ],
-  lists: [ [ 'me', 'you' ], ['us', 'them'] ]
+  lists: [ [ 'me', 'you' ], ['us', 'them'] ],
+  empty: [ { 'us': 'them' } ]
 };
 
 let defaults = {
@@ -41,7 +42,8 @@ let defaults = {
   },
   func: d12.ingestObject,
   list: ['string'],
-  lists: [ [ ] ]
+  lists: [ [ ] ],
+  empty: [ {} ]
 };
 
 function checkDatatypes(func, match, mismatch, type, title, alt=null){
@@ -133,6 +135,9 @@ describe('d12.js', function() {
     });
     it('should recursively explore arrays', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('lists').with.lengthOf(2)
+    });
+    it('should return all keys of an object in options if default object is empty', function(){
+      expect(d12.ingestOptions(options, defaults).empty[0]).to.have.property('us')
     });
   })
   
