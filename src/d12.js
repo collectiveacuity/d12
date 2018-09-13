@@ -5,7 +5,7 @@ export function ingestObject (obj) {
   
   /* a method to ensure a plain object output */
   
-  return _.isPlainObject(obj) ? obj : new Object.constructor(null)
+  return _.isPlainObject(obj) ? obj : {}
   
 }
 
@@ -74,7 +74,7 @@ export function ingestOptions (options, defaults) {
 
   // define ingest map helper function
   function _ingest_map (opts, defs) {
-    let output = new Object.constructor(null);
+    let output = {};
     if (!objectSize(defs)) {
       for (let k in opts) {
         output[k] = opts[k]
@@ -125,7 +125,7 @@ export function ingestOptions (options, defaults) {
   }
 
   // start recursion
-  return _ingest_map(options, defaults)
+  return _ingest_map(options, defaults);
   
 }
 

@@ -30,7 +30,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function ingestObject(obj) {
   /* a method to ensure a plain object output */
-  return _lodash.default.isPlainObject(obj) ? obj : new Object.constructor(null);
+  return _lodash.default.isPlainObject(obj) ? obj : {};
 }
 
 function ingestString(obj) {
@@ -77,7 +77,7 @@ function ingestOptions(options, defaults) {
   options = ingestObject(options); // define ingest map helper function
 
   function _ingest_map(opts, defs) {
-    var output = new Object.constructor(null);
+    var output = {};
 
     if (!objectSize(defs)) {
       for (var k in opts) {
