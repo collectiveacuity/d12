@@ -5,6 +5,7 @@
 npm-debug.log
 .hg/
 dev/
+cred/
 docs/
 docs_dev/
 test/
@@ -14,4 +15,5 @@ coverage/
 .babelrc
 .gitignore
 .hgignore
+.coveralls.yml
 package-lock.json
