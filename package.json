@@ -1,6 +1,6 @@
 {
   "name": "d12",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Platonic Solid for Ideal Data",
   "author": "Collective Acuity <support@collectiveacuity.com>",
   "contributors": [
@@ -23,8 +23,7 @@
   "main": "dist/d12.js",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha --require @babel/register test",
-    "build": "babel src --presets @babel/preset-env -o dist/d12.js; terser dist/d12.js -m --comments /@license/ -o dist/d12.min.js",
-    "prepare": "npm run build",
+    "build": "babel src --presets @babel/preset-env -o dist/d12.js; terser dist/d12.js -m --comments /@license/ -o dist/d12.min.js; node update.js",
     "dev": "mocha --require @babel/register test_dev",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -37,6 +36,6 @@
     "babel-loader": "^8.0.2",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
-    "terser": "^3.8.2"
+    "terser": "^3.10.0"
   }
 }

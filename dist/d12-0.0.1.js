@@ -1,13 +1,12 @@
-/*!
-* @name D12
+/**
+* D12 JAVASCRIPT MODULE
 * @description A Platonic Solid for Ideal Data
 * @author rcj1492
 * @license MIT
-* @version 0.0.2
+* @version 0.0.1
 * @copyright 2018 Collective Acuity 
 * @email support@collectiveacuity.com
-* @url https://github.com/collectiveacuity/d12
-*/
+**/
 "use strict";
 "use strict";
 
@@ -22,8 +21,6 @@ exports.ingestInteger = ingestInteger;
 exports.ingestNumber = ingestNumber;
 exports.objectSize = objectSize;
 exports.ingestOptions = ingestOptions;
-exports.deepCopy = deepCopy;
-exports.emptyObject = emptyObject;
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
@@ -139,36 +136,4 @@ function ingestOptions(options, defaults) {
 
 
   return _ingest_map(options, defaults);
-}
-
-function deepCopy(obj) {
-  /* a method for cloning an object */
-  // https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
-  if (obj == null || !(_lodash.default.isObjectLike(obj) || _lodash.default.isDate(obj))) {
-    return obj;
-  } else {
-    var copy;
-
-    if (_lodash.default.isDate(obj)) {
-      copy = new obj.constructor();
-    } else {
-      copy = obj.constructor();
-    }
-
-    for (var attr in obj) {
-      if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr]);
-    }
-
-    return copy;
-  }
-}
-
-function emptyObject(obj) {
-  /* a method for deleting all the properties of an object */
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      obj[key] = null;
-      delete obj[key];
-    }
-  }
 }

@@ -11,6 +11,8 @@ docs_dev/
 test/
 test_dev/
 coverage/
+dist/*-*.js
+update.js
 .nyc_output/
 .babelrc
 .gitignore
