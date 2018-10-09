@@ -9,7 +9,7 @@ _A Platonic Solid for Ideal Data_
 <table>
 <tr><td>Downloads:</td><td>https://www.npmjs.com/package/d12</td></tr>
 <tr><td>Source:</td><td>https://github.com/collectiveacuity/d12</td><tr>
-<tr><td>Documentation:</td><td>TBD</td><tr>
+<tr><td>Documentation:</td><td>https://collectiveacuity.github.io/d12</td><tr>
 </table>
 
 ## Intro
