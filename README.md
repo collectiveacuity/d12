@@ -1,6 +1,6 @@
-<a href="https://www.npmjs.com/package/d12"><img alt="version" src="https://img.shields.io/npm/v/d12.svg"></a> 
-<a href="https://www.npmjs.com/package/d12"><img alt="license" src="https://img.shields.io/npm/l/d12.svg"></a>
-<a href="https://www.npmjs.com/package/d12"><img src="https://img.shields.io/coveralls/github/collectiveacuity/d12.svg"></a>
+![Version](https://img.shields.io/npm/v/d12.svg)
+![License](https://img.shields.io/npm/l/d12.svg)
+![Coverage](https://img.shields.io/coveralls/github/collectiveacuity/d12.svg)
 
 # D12
 _A Platonic Solid for Ideal Data_  
@@ -12,19 +12,22 @@ _A Platonic Solid for Ideal Data_
 <tr><td>Documentation:</td><td>TBD</td><tr>
 </table>
 
-Intro
------
+## Intro
 d12 is a javascript package for data ingestion and validation. d12 extends the methods in lodash to tackle the evaluation of more complex data structures in order to reduce code verbosity and make input validation easier.
 
 ## Installation
-
-Using npm:
-```bash
-npm install d12
+From NPM:
+```shell
+$ npm install d12
+```
+From GitHub:
+```shell
+$ git clone https://github.com/collectiveacuity/d12
+$ cd d12
+$ npm install
 ```
 
-Usage
------
+## Usage
 __ingestObject__ : to ensure a plain object output
 ```javascript
 import { ingestObject } from 'd12'
@@ -59,20 +62,22 @@ console.log(ingestOptions(options, defaults))
 // }
 ```
 
-Testing
--------
-```bash
-npm test
+## Testing
+```shell
+$ npm test
 ```
 
-Building
---------
-```bash
-npm run build
+## Building
+```shell
+$ npm run build
 ```
 
-Collaboration Notes
--------------------
+## Reporting
+```shell
+$ npm run coverage
+```
+
+## Collaboration Notes
 A collaborator should always **FORK** the repo from the main master and fetch changes from the upstream repo before making pull requests. Please add unittests and documentation for any additional code in a pull request.
 
 

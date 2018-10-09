@@ -129,3 +129,39 @@ export function ingestOptions (options, defaults) {
   
 }
 
+export function deepCopy (obj) {
+  
+  /* a method for cloning an object */
+
+  // https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
+  
+  if (obj == null || !(_.isObjectLike(obj) || _.isDate(obj))) {
+    return obj
+  } else {
+    let copy;
+    if (_.isDate(obj)){
+      copy = new obj.constructor();
+    } else {
+      copy = obj.constructor();
+    }
+    for (let attr in obj) {
+      if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr])
+    }
+    return copy
+  }
+  
+}
+
+export function emptyObject (obj) {
+  
+  /* a method for deleting all the properties of an object */
+
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      obj[key] = null;
+      delete obj[key]
+    }
+  }
+
+}
+

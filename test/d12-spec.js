@@ -10,6 +10,7 @@ let datatypes = {
   'the array': ['me', 'you'],
   'the string': 'me',
   'the function': d12.ingestObject,
+  'the date object': new Date(),
   'the null value': null,
   'the boolean': true,
   'the number': 12.12,
@@ -26,6 +27,7 @@ let options = {
     nested: 'me'
   },
   func: d12.ingestArray,
+  d: new Date(),
   list: [ 'me', 'you', true ],
   lists: [ [ 'me', 'you' ], ['us', 'them'] ],
   empty: [ { 'us': 'them' } ]
@@ -41,6 +43,7 @@ let defaults = {
     nested: 'you'
   },
   func: d12.ingestObject,
+  d: new Date(),
   list: ['string'],
   lists: [ [ ] ],
   empty: [ {} ]
@@ -112,7 +115,7 @@ describe('d12.js', function() {
   describe('objectSize()', function () {
     it('should return the length of a plain object', function () {
       expect(d12.objectSize(options)).to.be.a('number');
-      expect(d12.objectSize(datatypes)).to.equal(9);
+      expect(d12.objectSize(datatypes)).to.equal(10);
     });
   });
   
@@ -125,7 +128,8 @@ describe('d12.js', function() {
     });
     it('should return key values from options that match default datatypes', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('dt').to.equal(1123456789.012);
-      expect(d12.ingestOptions(options, defaults)).to.have.property('func').to.be.a('function')
+      expect(d12.ingestOptions(options, defaults)).to.have.property('func').to.be.a('function');
+      expect(d12.ingestOptions(options, defaults)).to.have.property('d').to.be.a('date')
     });
     it('should only add items to a sub-array which match the default datatype', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('list').with.lengthOf(2)
@@ -139,6 +143,22 @@ describe('d12.js', function() {
     it('should return all keys of an object in options if default object is empty', function(){
       expect(d12.ingestOptions(options, defaults).empty[0]).to.have.property('us')
     });
-  })
+  });
+  
+  describe('deepCopy()', function () {
+    it('should return a plain object with the same properties as original', function () {
+      expect(Object.keys(d12.deepCopy(options))).to.have.lengthOf(Object.keys(options).length);
+      expect(d12.deepCopy(options)).to.have.property('list').with.lengthOf(3)
+    })
+  });
+  
+  describe('emptyObject()', function () {
+    it('should return an empty object', function () {
+      expect(d12.objectSize(d12.emptyObject(d12.deepCopy(options)))).to.equal(0)
+    });
+    it('should not delete the properties of original object', function () {
+      expect(options).to.have.property('token')
+    })
+  });
   
 });
