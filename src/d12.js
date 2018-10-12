@@ -165,3 +165,96 @@ export function emptyObject (obj) {
 
 }
 
+export function validateString (input, criteria) {
+
+  /* a method to test string input for valid criteria */
+
+  // ingest criteria
+  let defaults = {
+    must_contain: {},
+    must_not_contain: {},
+    equal_to: {},
+    max_length: 0,
+    min_length: 0
+  };
+  const tests = ingestOptions(criteria, defaults);
+
+  // construct empty report
+  let report = {
+    required: '',
+    prohibited: ''
+  };
+
+  // test input for required regex
+  for (let key in tests.must_contain) {
+    let test_pattern = new RegExp(key, 'i');
+    if (!test_pattern.test(input)) {
+      report.required = tests.must_contain[key];
+      return report;
+    }
+  }
+  
+  // test input for expected value
+  for (let key in tests.equal_to) {
+    if (key !== input) {
+      report.required = tests.equal_to[key];
+      return report;
+    }
+  }
+
+  // test input for min length
+  if (tests.min_length) {
+    if (input.length < tests.min_length) {
+      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters.';
+      return report;
+    }
+  }
+  
+  // test input for prohibited regex
+  for (let key in tests.must_not_contain) {
+    let test_pattern = new RegExp(key, 'i');
+    if (test_pattern.test(input)) {
+      report.prohibited = tests.must_not_contain[key];
+      return report;
+    }
+  }
+
+  // test input for max length
+  if (tests.max_length) {
+    if (input.length > tests.max_length) {
+      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters.';
+      return report;
+    }
+  }
+
+  // return clean report
+  return report;
+  
+}
+
+export function validateData (input, criteria) {
+  
+  /* a method to test data against valid criteria */
+  
+  let report = {
+    required: '',
+    prohibited: ''
+  };
+  
+  const datatype = ingestString(criteria.datatype);
+  
+  if (datatype === 'string'){
+    if (_.isString(input)){
+      return validateString(input, criteria)
+    } else {
+      report.required = 'must be a string datatype.';
+      return report;
+    }
+  }
+  
+  // TODO add validation of numbers, integers, arrays, maps and booleans
+  
+  return report;
+  
+}
+

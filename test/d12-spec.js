@@ -2,6 +2,7 @@ import * as d12 from '../src/d12'
 import { describe } from 'mocha'
 import { expect } from 'chai'
 import _ from 'lodash'
+import * as CRITERIA from '../src/criteria.json'
 
 // http://www.chaijs.com/guide/styles/
 
@@ -159,6 +160,24 @@ describe('d12.js', function() {
     it('should not delete the properties of original object', function () {
       expect(options).to.have.property('token')
     })
+  });
+  
+  describe('validateString()', function() {
+    it('should pass "password" without error messages', function() {
+      expect(d12.validateString('password', CRITERIA.account_password).required).to.equal('')
+    });
+    it('should pass "support@collectiveacuity.com" without error messages', function() {
+      expect(d12.validateString('support@collectiveacuity.com', CRITERIA.email_address).required).to.equal('')
+    });
+  });
+  
+  describe('validateData()', function() {
+    it('should pass "password" without error messages', function() {
+      expect(d12.validateData('password', CRITERIA.account_password).prohibited).to.equal('')
+    });
+    it('should pass "support@collectiveacuity.com" without error messages', function() {
+      expect(d12.validateData('support@collectiveacuity.com', CRITERIA.email_address).prohibited).to.equal('')
+    });
   });
   
 });

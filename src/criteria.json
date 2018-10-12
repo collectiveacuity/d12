@@ -1,0 +1,20 @@
+{
+  "account_password": {
+    "min_length": 8,
+    "max_length": 64,
+    "datatype": "string"
+  },
+  "email_address": {
+    "must_not_contain": {
+      "^\\.": "cannot start with .",
+      "\\.\\.": "cannot contain ..",
+      "\\.@": "username cannot end with .",
+      "@\\.": "domain name cannot start with .",
+      "[\\'\\s<>(),]": "cannot contain '<>(), characters or spaces."
+    },
+    "must_contain": {
+      "^[\\w\\-_\\.\\+]{1,36}?@[\\w\\-\\.]{1,36}?\\.[a-z]{2,10}$": "is not a valid email address."
+    },
+    "datatype": "string"
+  }
+}
