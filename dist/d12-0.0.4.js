@@ -20,9 +20,6 @@ exports.isBoolean = isBoolean;
 exports.isPlainObject = isPlainObject;
 exports.isArray = isArray;
 exports.isInteger = isInteger;
-exports.isObjectLike = isObjectLike;
-exports.isDate = isDate;
-exports.isFunction = isFunction;
 exports.ingestObject = ingestObject;
 exports.ingestString = ingestString;
 exports.ingestBoolean = ingestBoolean;
@@ -36,92 +33,64 @@ exports.emptyObject = emptyObject;
 exports.validateString = validateString;
 exports.validateData = validateData;
 
-var _isString2 = _interopRequireDefault(require("lodash/isString"));
-
-var _isNumber2 = _interopRequireDefault(require("lodash/isNumber"));
-
-var _isBoolean2 = _interopRequireDefault(require("lodash/isBoolean"));
-
-var _isPlainObject2 = _interopRequireDefault(require("lodash/isPlainObject"));
-
-var _isArray2 = _interopRequireDefault(require("lodash/isArray"));
-
-var _isInteger2 = _interopRequireDefault(require("lodash/isInteger"));
-
-var _isObjectLike2 = _interopRequireDefault(require("lodash/isObjectLike"));
-
-var _isDate2 = _interopRequireDefault(require("lodash/isDate"));
-
-var _isFunction2 = _interopRequireDefault(require("lodash/isFunction"));
+var _lodash = _interopRequireDefault(require("lodash"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function isString(obj) {
-  return (0, _isString2.default)(obj);
+  return _lodash.default.isString(obj);
 }
 
 function isNumber(obj) {
-  return (0, _isNumber2.default)(obj);
+  return _lodash.default.isNumber(obj);
 }
 
 function isBoolean(obj) {
-  return (0, _isBoolean2.default)(obj);
+  return _lodash.default.isBoolean(obj);
 }
 
 function isPlainObject(obj) {
-  return (0, _isPlainObject2.default)(obj);
+  return _lodash.default.isPlainObject(obj);
 }
 
 function isArray(obj) {
-  return (0, _isArray2.default)(obj);
+  return _lodash.default.isArray(obj);
 }
 
 function isInteger(obj) {
-  return (0, _isInteger2.default)(obj);
-}
-
-function isObjectLike(obj) {
-  return (0, _isObjectLike2.default)(obj);
-}
-
-function isDate(obj) {
-  return (0, _isDate2.default)(obj);
-}
-
-function isFunction(obj) {
-  return (0, _isFunction2.default)(obj);
+  return _lodash.default.isInteger(obj);
 }
 
 function ingestObject(obj) {
   /* a method to ensure a plain object output */
-  return isPlainObject(obj) ? obj : {};
+  return _lodash.default.isPlainObject(obj) ? obj : {};
 }
 
 function ingestString(obj) {
   /* a method to ensure a string output */
-  return isString(obj) ? obj : '';
+  return _lodash.default.isString(obj) ? obj : '';
 }
 
 function ingestBoolean(obj) {
   /* a method to ensure a boolean output */
-  return isBoolean(obj) ? obj : false;
+  return _lodash.default.isBoolean(obj) ? obj : false;
 }
 
 function ingestArray(obj) {
   /* a method to ensure an array output */
-  return isArray(obj) ? obj : [];
+  return _lodash.default.isArray(obj) ? obj : [];
 }
 
 function ingestInteger(obj) {
   /* a method to ensure an integer output */
-  return isInteger(obj) ? obj : 0;
+  return _lodash.default.isInteger(obj) ? obj : 0;
 }
 
 function ingestNumber(obj) {
   /* a method to ensure an integer output */
-  return isNumber(obj) ? obj : 0;
+  return _lodash.default.isNumber(obj) ? obj : 0;
 }
 
 function objectSize(obj) {
@@ -153,9 +122,9 @@ function ingestOptions(options, defaults) {
       for (var key in defs) {
         if (key in opts) {
           if (_typeof(opts[key]) === _typeof(defs[key])) {
-            if (isArray(opts[key])) {
+            if (_lodash.default.isArray(opts[key])) {
               output[key] = _ingest_array(opts[key], defs[key]);
-            } else if (isPlainObject(opts[key])) {
+            } else if (_lodash.default.isPlainObject(opts[key])) {
               output[key] = _ingest_map(opts[key], defs[key]);
             } else {
               output[key] = opts[key];
@@ -186,9 +155,9 @@ function ingestOptions(options, defaults) {
         output.push(opts);
       } else {
         if (_typeof(opts[i]) === _typeof(item)) {
-          if (isArray(opts[i])) {
+          if (_lodash.default.isArray(opts[i])) {
             output.push(_ingest_array(opts[i], item));
-          } else if (isPlainObject(opts[i])) {
+          } else if (_lodash.default.isPlainObject(opts[i])) {
             output.push(_ingest_map(opts[i], item));
           } else {
             output.push(opts[i]);
@@ -207,12 +176,12 @@ function ingestOptions(options, defaults) {
 function deepCopy(obj) {
   /* a method for cloning an object */
   // https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
-  if (obj == null || !(isObjectLike(obj) || isDate(obj))) {
+  if (obj == null || !(_lodash.default.isObjectLike(obj) || _lodash.default.isDate(obj))) {
     return obj;
   } else {
     var copy;
 
-    if (isDate(obj)) {
+    if (_lodash.default.isDate(obj)) {
       copy = new obj.constructor();
     } else {
       copy = obj.constructor();
@@ -309,7 +278,7 @@ function validateData(input, criteria) {
   var datatype = ingestString(criteria.datatype);
 
   if (datatype === 'string') {
-    if (isString(input)) {
+    if (_lodash.default.isString(input)) {
       return validateString(input, criteria);
     } else {
       report.required = 'must be a string datatype.';

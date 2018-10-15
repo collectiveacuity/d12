@@ -1,11 +1,55 @@
 // import dependencies
-import _ from 'lodash'
+import _isString from 'lodash/isString'
+import _isNumber from 'lodash/isNumber'
+import _isBoolean from 'lodash/isBoolean'
+import _isPlainObject from 'lodash/isPlainObject'
+import _isArray from 'lodash/isArray'
+import _isInteger from 'lodash/isInteger'
+import _isObjectLike from 'lodash/isObjectLike'
+import _isDate from 'lodash/isDate'
+import _isFunction from 'lodash/isFunction'
+
+export function isString (obj) {
+  return _isString(obj)
+}
+
+export function isNumber (obj) {
+  return _isNumber(obj)
+}
+
+export function isBoolean (obj) {
+  return _isBoolean(obj)
+}
+
+export function isPlainObject (obj) {
+  return _isPlainObject(obj)
+}
+
+export function isArray(obj) {
+  return _isArray(obj)
+}
+
+export function isInteger(obj) {
+  return _isInteger(obj)
+}
+
+export function isObjectLike(obj) {
+  return _isObjectLike(obj)
+}
+
+export function isDate(obj) {
+  return _isDate(obj)
+}
+
+export function isFunction(obj) {
+  return _isFunction(obj)
+}
 
 export function ingestObject (obj) {
   
   /* a method to ensure a plain object output */
   
-  return _.isPlainObject(obj) ? obj : {}
+  return isPlainObject(obj) ? obj : {}
   
 }
 
@@ -13,7 +57,7 @@ export function ingestString (obj) {
   
   /* a method to ensure a string output */
   
-  return _.isString(obj) ? obj : ''
+  return isString(obj) ? obj : ''
   
 }
 
@@ -21,7 +65,7 @@ export function ingestBoolean (obj) {
 
   /* a method to ensure a boolean output */
   
-  return _.isBoolean(obj) ? obj : false
+  return isBoolean(obj) ? obj : false
   
 }
 
@@ -29,7 +73,7 @@ export function ingestArray (obj) {
   
   /* a method to ensure an array output */
   
-  return _.isArray(obj) ? obj : []
+  return isArray(obj) ? obj : []
   
 }
 
@@ -37,7 +81,7 @@ export function ingestInteger (obj) {
   
   /* a method to ensure an integer output */
   
-  return _.isInteger(obj) ? obj : 0
+  return isInteger(obj) ? obj : 0
   
 }
 
@@ -45,7 +89,7 @@ export function ingestNumber (obj) {
   
   /* a method to ensure an integer output */
   
-  return _.isNumber(obj) ? obj : 0
+  return isNumber(obj) ? obj : 0
   
 }
 
@@ -83,9 +127,9 @@ export function ingestOptions (options, defaults) {
       for (let key in defs) {
         if (key in opts) {
           if (typeof (opts[key]) === typeof (defs[key])) {
-            if (_.isArray(opts[key])) {
+            if (isArray(opts[key])) {
               output[key] = _ingest_array(opts[key], defs[key])
-            } else if (_.isPlainObject(opts[key])) {
+            } else if (isPlainObject(opts[key])) {
               output[key] = _ingest_map(opts[key], defs[key])
             } else {
               output[key] = opts[key]
@@ -111,9 +155,9 @@ export function ingestOptions (options, defaults) {
         output.push(opts)
       } else {
         if (typeof (opts[i]) === typeof (item)) {
-          if (_.isArray(opts[i])) {
+          if (isArray(opts[i])) {
             output.push(_ingest_array(opts[i], item))
-          } else if (_.isPlainObject(opts[i])) {
+          } else if (isPlainObject(opts[i])) {
             output.push(_ingest_map(opts[i], item))
           } else {
             output.push(opts[i])
@@ -135,11 +179,11 @@ export function deepCopy (obj) {
 
   // https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
   
-  if (obj == null || !(_.isObjectLike(obj) || _.isDate(obj))) {
+  if (obj == null || !(isObjectLike(obj) || isDate(obj))) {
     return obj
   } else {
     let copy;
-    if (_.isDate(obj)){
+    if (isDate(obj)){
       copy = new obj.constructor();
     } else {
       copy = obj.constructor();
@@ -244,7 +288,7 @@ export function validateData (input, criteria) {
   const datatype = ingestString(criteria.datatype);
   
   if (datatype === 'string'){
-    if (_.isString(input)){
+    if (isString(input)){
       return validateString(input, criteria)
     } else {
       report.required = 'must be a string datatype.';
