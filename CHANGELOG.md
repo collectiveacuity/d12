@@ -1,5 +1,8 @@
 ## ChangeLog
 
+### 0.0.3 (2018.10.??)
+__[ADDED]__ validateData, validateString
+
 ### 0.0.2 (2018.10.09)
 __[ADDED]__ deepCopy, emptyObject
 
