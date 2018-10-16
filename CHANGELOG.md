@@ -1,6 +1,11 @@
 ## ChangeLog
 
-### 0.0.3 (2018.10.??)
+### 0.0.4 (2018.10.16)
+__[ADDED]__ joinWords  
+__[UPDATED]__ validateString  
+__[FIXED]__ ingestOptions
+
+### 0.0.3 (2018.10.13)
 __[ADDED]__ validateData, validateString
 
 ### 0.0.2 (2018.10.09)

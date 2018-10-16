@@ -179,10 +179,10 @@ describe('d12.js', function() {
       expect(d12.validateString('support@collectiveacuity.com', CRITERIA.email_address).required).to.equal('')
     });
     it('should report a required error for "password"', function() {
-      expect(d12.validateString('password', CRITERIA.account_password).required).with.lengthOf(47);
+      expect(d12.validateString('password', CRITERIA.account_password).required).with.lengthOf(46);
     });
     it('should report a prohibited error for "noreply@collectiveacuity.com"', function() {
-      expect(d12.validateString('noreply@collectiveacuity.com', CRITERIA.email_address).prohibited).with.lengthOf(41);
+      expect(d12.validateString('noreply@collectiveacuity.com', CRITERIA.email_address).prohibited).with.lengthOf(40);
     });
   });
   

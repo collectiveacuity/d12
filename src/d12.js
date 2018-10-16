@@ -111,6 +111,33 @@ export function ingestOptions (options, defaults) {
   * will add items from the corresponding key in options, otherwise it will only add 
   * items whose value matches the datatype of the first item declared in defaults.
   * no items declared in an array in defaults will be added to the output.
+  * 
+  * example:
+  * 
+  * let options = {
+  *   token: 'abc',
+  *   dt: 1123456789.012,
+  *   timeout: '4000',
+  *   places: [ 'karachi', 3, 'tallinn', { place: 'berlin' }, 'london' ]
+  *   extra: 'key'
+  * }
+  * let defaults = {
+  *   token: '',
+  *   dt: 0.0,
+  *   timeout: 9000,
+  *   method: 'header',
+  *   places: [ '' ]
+  *   offline: false
+  * }
+  * console.log(ingestOptions(options, defaults))
+  * $ { 
+  * $   token: 'abc', 
+  * $   dt: 1123456789.012, 
+  * $   timeout: 9000, 
+  * $   method: 'header',
+  * $   places: [ 'karachi', 'tallinn', 'london' ] 
+  * $   offline: false
+  * $ }
   * */
   
   // verify input is a map
@@ -282,7 +309,7 @@ export function validateString (input, criteria) {
   // test input for min length
   if (tests.min_length) {
     if (input.length < tests.min_length) {
-      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters.';
+      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters';
       return report;
     }
   }
@@ -291,7 +318,7 @@ export function validateString (input, criteria) {
   if (tests.discrete_values.length) {
     if (tests.discrete_values.indexOf(input) === -1){
       let words = joinWords(tests.discrete_values, {conjunction: 'or', prefix: '"', suffix: '"'});
-      report.required = 'may only be ' + words + '.';
+      report.required = 'may only be ' + words;
       return report;
     }
   }
@@ -308,7 +335,7 @@ export function validateString (input, criteria) {
   // test input for max length
   if (tests.max_length) {
     if (input.length > tests.max_length) {
-      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters.';
+      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters';
       return report;
     }
   }
@@ -317,7 +344,7 @@ export function validateString (input, criteria) {
   if (tests.excluded_values.length) {
     if (tests.excluded_values.indexOf(input) > -1){
       let words = joinWords(tests.excluded_values, {conjunction: 'or', prefix: '"', suffix: '"'});
-      report.prohibited = 'cannot be ' + words + '.';
+      report.prohibited = 'cannot be ' + words;
       return report;
     }
   }

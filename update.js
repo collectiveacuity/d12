@@ -22,4 +22,12 @@ function create_version(dist_folder='./dist'){
   }
 }
 
+function copy_readme(docs_folder='./docs'){
+  if (fs.existsSync('README.md') && fs.existsSync(docs_folder)){
+    var doc_path = path.join(docs_folder, 'README.md');
+    fs.copyFileSync('README.md', doc_path)
+  }
+}
+
 create_version();
+copy_readme();

@@ -3,7 +3,7 @@
 * @description A Platonic Solid for Ideal Data
 * @author rcj1492
 * @license MIT
-* @version 0.0.2
+* @version 0.0.4
 * @copyright 2018 Collective Acuity 
 * @email support@collectiveacuity.com
 * @url https://github.com/collectiveacuity/d12
@@ -33,6 +33,7 @@ exports.objectSize = objectSize;
 exports.ingestOptions = ingestOptions;
 exports.deepCopy = deepCopy;
 exports.emptyObject = emptyObject;
+exports.joinWords = joinWords;
 exports.validateString = validateString;
 exports.validateData = validateData;
 
@@ -138,6 +139,33 @@ function ingestOptions(options, defaults) {
   * will add items from the corresponding key in options, otherwise it will only add 
   * items whose value matches the datatype of the first item declared in defaults.
   * no items declared in an array in defaults will be added to the output.
+  * 
+  * example:
+  * 
+  * let options = {
+  *   token: 'abc',
+  *   dt: 1123456789.012,
+  *   timeout: '4000',
+  *   places: [ 'karachi', 3, 'tallinn', { place: 'berlin' }, 'london' ]
+  *   extra: 'key'
+  * }
+  * let defaults = {
+  *   token: '',
+  *   dt: 0.0,
+  *   timeout: 9000,
+  *   method: 'header',
+  *   places: [ '' ]
+  *   offline: false
+  * }
+  * console.log(ingestOptions(options, defaults))
+  * $ { 
+  * $   token: 'abc', 
+  * $   dt: 1123456789.012, 
+  * $   timeout: 9000, 
+  * $   method: 'header',
+  * $   places: [ 'karachi', 'tallinn', 'london' ] 
+  * $   offline: false
+  * $ }
   * */
   // verify input is a map
   options = ingestObject(options); // define ingest map helper function
@@ -163,6 +191,8 @@ function ingestOptions(options, defaults) {
           } else {
             output[key] = defs[key];
           }
+        } else if (isArray(defs[key])) {
+          output[key] = [];
         } else {
           output[key] = defs[key];
         }
@@ -236,6 +266,36 @@ function emptyObject(obj) {
   }
 }
 
+function joinWords(array, options) {
+  /* a method for conjoining words */
+  // ingest options
+  var defaults = {
+    conjunction: 'and',
+    // adds value before last item in array
+    prefix: '',
+    // adds value before each item in array
+    suffix: '' // adds value after each item in array
+
+  };
+  var kwargs = ingestOptions(options, defaults); // compose text
+
+  var text = '';
+
+  for (var i = 0; i < array.length; i++) {
+    if (text) {
+      if (i + 1 === array.length) {
+        text += ' ' + kwargs.conjunction + ' ';
+      } else {
+        text += ', ';
+      }
+    }
+
+    text += kwargs.prefix + array[i] + kwargs.suffix;
+  }
+
+  return text;
+}
+
 function validateString(input, criteria) {
   /* a method to test string input for valid criteria */
   // ingest criteria
@@ -244,7 +304,9 @@ function validateString(input, criteria) {
     must_not_contain: {},
     equal_to: {},
     max_length: 0,
-    min_length: 0
+    min_length: 0,
+    discrete_values: [''],
+    excluded_values: ['']
   };
   var tests = ingestOptions(criteria, defaults); // construct empty report
 
@@ -273,7 +335,20 @@ function validateString(input, criteria) {
 
   if (tests.min_length) {
     if (input.length < tests.min_length) {
-      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters.';
+      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters';
+      return report;
+    }
+  } // test input for discrete values
+
+
+  if (tests.discrete_values.length) {
+    if (tests.discrete_values.indexOf(input) === -1) {
+      var words = joinWords(tests.discrete_values, {
+        conjunction: 'or',
+        prefix: '"',
+        suffix: '"'
+      });
+      report.required = 'may only be ' + words;
       return report;
     }
   } // test input for prohibited regex
@@ -291,7 +366,21 @@ function validateString(input, criteria) {
 
   if (tests.max_length) {
     if (input.length > tests.max_length) {
-      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters.';
+      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters';
+      return report;
+    }
+  } // test input for discrete values
+
+
+  if (tests.excluded_values.length) {
+    if (tests.excluded_values.indexOf(input) > -1) {
+      var _words = joinWords(tests.excluded_values, {
+        conjunction: 'or',
+        prefix: '"',
+        suffix: '"'
+      });
+
+      report.prohibited = 'cannot be ' + _words;
       return report;
     }
   } // return clean report

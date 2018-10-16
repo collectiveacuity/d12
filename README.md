@@ -44,23 +44,43 @@ let options = {
   dt: 1123456789.012,
   timeout: '4000',
   extra: 'key'
-}
+};
 let defaults = {
   token: '',
   dt: 0.0,
   timeout: 9000,
   method: 'header',
   offline: false
-}
+};
 console.log(ingestOptions(options, defaults))
-// { 
-//   token: 'abc', 
-//   dt: 1123456789.012, 
-//   timeout: 9000, 
-//   method: 'header', 
-//   offline: false 
-// }
 ```
+```
+{ 
+  token: 'abc', 
+  dt: 1123456789.012, 
+  timeout: 9000, 
+  method: 'header', 
+  offline: false
+}
+```
+__validateString__ : to test a string input against a set of valid criteria 
+```javascript
+import { validateString } from 'd12'
+let criteria = {
+  datatype: 'string',
+  min_length: 8,
+  max_length: 64,
+  excluded_values: [ '12345678', 'password' ]
+};
+console.log(validateString('password', criteria))
+```
+```
+{ 
+  required: '',
+  prohibited: 'cannot be "12345678" or "password"'
+}
+```
+
 
 ## Testing
 ```shell
