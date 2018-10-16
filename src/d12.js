@@ -137,6 +137,8 @@ export function ingestOptions (options, defaults) {
           } else {
             output[key] = defs[key]
           }
+        } else if (isArray(defs[key])){
+          output[key] = []    
         } else {
           output[key] = defs[key]
         }
@@ -209,6 +211,35 @@ export function emptyObject (obj) {
 
 }
 
+export function joinWords (array, options) {
+
+  /* a method for conjoining words */
+  
+  // ingest options
+  let defaults = {
+    conjunction: 'and', // adds value before last item in array
+    prefix: '', // adds value before each item in array
+    suffix: '' // adds value after each item in array
+  };
+  let kwargs = ingestOptions(options, defaults);
+  
+  // compose text
+  let text = '';
+  for (let i = 0; i < array.length; i++){
+    if (text){
+      if (i + 1 === array.length){
+        text += ' ' + kwargs.conjunction + ' '
+      } else {
+        text += ', '
+      }
+    }
+    text += kwargs.prefix + array[i] + kwargs.suffix
+  }
+  
+  return text
+  
+}
+
 export function validateString (input, criteria) {
 
   /* a method to test string input for valid criteria */
@@ -219,7 +250,9 @@ export function validateString (input, criteria) {
     must_not_contain: {},
     equal_to: {},
     max_length: 0,
-    min_length: 0
+    min_length: 0,
+    discrete_values: [ '' ],
+    excluded_values: [ '' ]
   };
   const tests = ingestOptions(criteria, defaults);
 
@@ -254,6 +287,15 @@ export function validateString (input, criteria) {
     }
   }
   
+  // test input for discrete values
+  if (tests.discrete_values.length) {
+    if (tests.discrete_values.indexOf(input) === -1){
+      let words = joinWords(tests.discrete_values, {conjunction: 'or', prefix: '"', suffix: '"'});
+      report.required = 'may only be ' + words + '.';
+      return report;
+    }
+  }
+  
   // test input for prohibited regex
   for (let key in tests.must_not_contain) {
     let test_pattern = new RegExp(key, 'i');
@@ -267,6 +309,15 @@ export function validateString (input, criteria) {
   if (tests.max_length) {
     if (input.length > tests.max_length) {
       report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters.';
+      return report;
+    }
+  }
+  
+  // test input for discrete values
+  if (tests.excluded_values.length) {
+    if (tests.excluded_values.indexOf(input) > -1){
+      let words = joinWords(tests.excluded_values, {conjunction: 'or', prefix: '"', suffix: '"'});
+      report.prohibited = 'cannot be ' + words + '.';
       return report;
     }
   }

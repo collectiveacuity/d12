@@ -162,17 +162,32 @@ describe('d12.js', function() {
     })
   });
   
+  describe('joinWords()', function() {
+    it('should join [coffee,tea] into coffee or tea', function() {
+      expect(d12.joinWords(['coffee','tea'],{conjunction:'or'})).to.equal('coffee or tea')
+    });
+    it('should join [fits,starts] into "fits" and "starts"', function() {
+      expect(d12.joinWords(['fits','starts'],{prefix:'"',suffix:'"'})).to.equal('"fits" and "starts"')
+    })
+  });
+  
   describe('validateString()', function() {
-    it('should pass "password" without error messages', function() {
-      expect(d12.validateString('password', CRITERIA.account_password).required).to.equal('')
+    it('should pass "earnesthappycoders" without error messages', function() {
+      expect(d12.validateString('earnesthappycoders', CRITERIA.account_password).required).to.equal('')
     });
     it('should pass "support@collectiveacuity.com" without error messages', function() {
       expect(d12.validateString('support@collectiveacuity.com', CRITERIA.email_address).required).to.equal('')
     });
+    it('should report a required error for "password"', function() {
+      expect(d12.validateString('password', CRITERIA.account_password).required).with.lengthOf(47);
+    });
+    it('should report a prohibited error for "noreply@collectiveacuity.com"', function() {
+      expect(d12.validateString('noreply@collectiveacuity.com', CRITERIA.email_address).prohibited).with.lengthOf(41);
+    });
   });
   
   describe('validateData()', function() {
-    it('should pass "password" without error messages', function() {
+    it('should pass "earnesthappycoders" without error messages', function() {
       expect(d12.validateData('password', CRITERIA.account_password).prohibited).to.equal('')
     });
     it('should pass "support@collectiveacuity.com" without error messages', function() {
