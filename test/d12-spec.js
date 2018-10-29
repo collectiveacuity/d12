@@ -50,6 +50,20 @@ let defaults = {
   empty: [ {} ]
 };
 
+let alterations = {
+  token: 'xyz',
+  dt: 1123456789.012,
+  timeout: 4000,
+  top: {
+    nested: 'you'
+  },
+  func: d12.ingestArray,
+  d: new Date(),
+  list: [ 'us' ],
+  lists: [ [ 'me', 'you' ], ['us', 'them']],
+  empty: []
+};
+
 function checkDatatypes(func, match, mismatch, type, title, alt=null){
   for (let key in datatypes){
     const value = datatypes[key];
@@ -168,6 +182,35 @@ describe('d12.js', function() {
     });
     it('should join [fits,starts] into "fits" and "starts"', function() {
       expect(d12.joinWords(['fits','starts'],{prefix:'"',suffix:'"'})).to.equal('"fits" and "starts"')
+    })
+  });
+  
+  describe('parseDiff()', function() {
+    it('should return deleted keys as null values', function() {
+      expect(d12.parseDiff(alterations, options)).to.have.property('extra').to.equal(null)
+    });
+    it('should return only the items in a shorter array', function() {
+      expect(d12.parseDiff(alterations, options)).to.have.property('list').with.lengthOf(1)
+    })
+  });
+  
+  describe('upsertValues()', function() {
+    let parsed = d12.parseDiff(alterations, options);
+    it('should delete keys with null values', function() {
+      expect(d12.upsertValues(parsed, options)).to.not.have.property('extra')
+    });
+    it('should replace the entire array value', function() {
+      expect(d12.upsertValues(parsed, options)).to.have.property('list').with.lengthOf(1)
+    });
+    it('should recreate the updated object parsed by parseDiff', function() {
+      let upserted = d12.upsertValues(parsed, options);
+      for (let k in upserted){
+        if (!(d12.isObjectLike(upserted[k]))){
+          expect(upserted[k]).to.equal(alterations[k])
+        } else {
+          expect(Object.keys(upserted[k]).length).to.equal(Object.keys(alterations[k]).length)
+        }
+      }
     })
   });
   

@@ -53,15 +53,39 @@ let defaults = {
   offline: false
 };
 console.log(ingestOptions(options, defaults))
+// => { 
+//      token: 'abc', 
+//      dt: 1123456789.012,
+//      timeout: 9000, 
+//      method: 'header', 
+//      offline: false 
+//    }
 ```
-```
-{ 
-  token: 'abc', 
-  dt: 1123456789.012, 
-  timeout: 9000, 
-  method: 'header', 
+__parseDiff__ : to parse the differences between two objects
+```javascript
+import { parseDiff } from 'd12'
+let options = {
+  token: 'abc',
+  dt: 1123456789.012,
+  timeout: '4000',
+  extra: 'key'
+};
+let defaults = {
+  token: '',
+  dt: 0.0,
+  timeout: 9000,
+  method: 'header',
   offline: false
-}
+};
+console.log(parseDiff(options, defaults))
+// => {
+//      token: 'abc', 
+//      dt: 1123456789.012,
+//      timeout: '4000',
+//      extra: 'key',
+//      method: null,
+//      offline: null 
+//    }
 ```
 __validateString__ : to test a string input against a set of valid criteria 
 ```javascript
@@ -73,14 +97,11 @@ let criteria = {
   excluded_values: [ '12345678', 'password' ]
 };
 console.log(validateString('password', criteria))
+// => { 
+//      required: '',
+//      prohibited: 'cannot be "12345678" or "password"'
+//    }
 ```
-```
-{ 
-  required: '',
-  prohibited: 'cannot be "12345678" or "password"'
-}
-```
-
 
 ## Testing
 ```shell

@@ -208,15 +208,13 @@ export function deepCopy (obj) {
 
   // https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
   
-  if (obj == null || !(isObjectLike(obj) || isDate(obj))) {
+  if (obj == null || !(isObjectLike(obj))) {
     return obj
   } else {
-    let copy;
     if (isDate(obj)){
-      copy = new obj.constructor();
-    } else {
-      copy = obj.constructor();
+      return obj
     }
+    let copy = obj.constructor();
     for (let attr in obj) {
       if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr])
     }
@@ -264,6 +262,100 @@ export function joinWords (array, options) {
   }
   
   return text
+  
+}
+
+export function parseDiff (altered, original) {
+  
+  /* a method to reduce an object to only the fields with altered values */
+  
+  // NOTE: deleted fields are returned as a null value
+  
+  function parse (a, o){
+    let n = {};
+    // examine all keys in altered
+    for (let k in a){
+      if (k in o) {
+        if (a[k] == null && o[k] != null){
+          n[k] = a[k]
+        } else if (isPlainObject(a[k])) {
+          if (isPlainObject(o[k])){
+            let nested = parse(a[k], o[k]);
+            if (objectSize(nested)){
+              n[k] = nested
+            }
+          } else {
+            n[k] = a[k]
+          }
+        } else if (a[k] !== o[k]){
+          n[k] = a[k]
+        }
+      } else {
+        n[k] = a[k]
+      }
+    }
+    // mark any missing key as a null value
+    for (let k in o){
+      if (!(k in a)){
+        n[k] = null
+      }
+    }
+    return n
+  }
+  
+  // ingest inputs
+  let maps = {
+    altered: ingestObject(altered),
+    original: ingestObject(original),
+    parsed: {}
+  };
+
+  // run recursive function
+  if (objectSize(maps.altered)) {
+    maps.parsed = parse(maps.altered, maps.original)
+  }
+
+  return maps.parsed
+  
+}
+
+export function upsertValues (upsert, existing) {
+  
+  /* a method to upsert values into an existing object */
+  
+  // NOTE:    declaring a value for a key as null will remove that key from its parent
+
+  // define recursive helper function
+  function runUpsert (u, e) {
+    for (let k in u) {
+      if (u[k] == null && (k in e)) {
+        delete e[k]
+      } else if (isPlainObject(u[k])) {
+        if ((k in e) && isPlainObject(e[k])) {
+          e[k] = runUpsert(u[k], e[k])
+        } else {
+          e[k] = u[k]
+        }
+      } else {
+        e[k] = u[k]
+      }
+    }
+    return e
+  }
+
+  // ingest inputs
+  let maps = {
+    upsert: deepCopy(ingestObject(upsert)),
+    existing: deepCopy(ingestObject(existing)),
+    updated: {}
+  };
+
+  // run recursive function
+  if (objectSize(maps.upsert)) {
+    maps.updated = runUpsert(maps.upsert, maps.existing)
+  }
+
+  return maps.updated
   
 }
 

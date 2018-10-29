@@ -1,7 +1,11 @@
 ## ChangeLog
 
+### 0.0.5 (2018.10.28)
+__[ADDED]__ parseDiff, upsertValues  
+__[FIXED]__ deepCopy
+
 ### 0.0.4 (2018.10.16)
-__[ADDED]__ joinWords  
+__[ADDED]__ joinWords   
 __[UPDATED]__ validateString  
 __[FIXED]__ ingestOptions
 
