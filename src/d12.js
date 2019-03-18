@@ -8,6 +8,7 @@ import _isInteger from 'lodash/isInteger'
 import _isObjectLike from 'lodash/isObjectLike'
 import _isDate from 'lodash/isDate'
 import _isFunction from 'lodash/isFunction'
+import _get from 'lodash/get'
 
 export function isString (obj) {
   return _isString(obj)
@@ -45,51 +46,87 @@ export function isFunction(obj) {
   return _isFunction(obj)
 }
 
-export function ingestObject (obj) {
+export function ingestObject (obj, path='') {
   
   /* a method to ensure a plain object output */
   
-  return isPlainObject(obj) ? obj : {}
+  if (path){
+    return isPlainObject(_get(obj, path)) ? obj : {}
+  } else {
+    return isPlainObject(obj) ? obj : {}
+  }
   
 }
 
-export function ingestString (obj) {
+export function ingestString (obj, path='') {
   
   /* a method to ensure a string output */
   
-  return isString(obj) ? obj : ''
+  if (path) {
+    return isString(_get(obj, path)) ? obj : ''
+  } else {
+    return isString(obj) ? obj : ''
+  }
   
 }
 
-export function ingestBoolean (obj) {
+export function ingestBoolean (obj, path='') {
 
   /* a method to ensure a boolean output */
   
-  return isBoolean(obj) ? obj : false
+  if (path) {
+    return isBoolean(_get(obj, path)) ? obj : false
+  } else {
+    return isBoolean(obj) ? obj : false
+  }
   
 }
 
-export function ingestArray (obj) {
+export function ingestArray (obj, path='') {
   
   /* a method to ensure an array output */
   
-  return isArray(obj) ? obj : []
+  if (path) {
+    return isArray(_get(obj, path)) ? obj : []
+  } else {
+    return isArray(obj) ? obj : []
+  }
   
 }
 
-export function ingestInteger (obj) {
+export function ingestInteger (obj, path='') {
   
   /* a method to ensure an integer output */
   
-  return isInteger(obj) ? obj : 0
+  if (path) {
+    return isInteger(_get(obj, path)) ? obj : 0
+  } else {
+    return isInteger(obj) ? obj : 0
+  }
   
 }
 
-export function ingestNumber (obj) {
+export function ingestNumber (obj, path='') {
   
   /* a method to ensure an integer output */
   
-  return isNumber(obj) ? obj : 0
+  if (path){
+    return isNumber(_get(obj, path)) ? obj : 0
+  } else {
+    return isNumber(obj) ? obj : 0
+  }
+  
+}
+
+export function ingestMap (obj, path='') {
+  
+  /* a method to ensure a plain object output */
+  
+  if (path){
+    return isPlainObject(_get(obj, path)) ? obj : {}
+  } else {
+    return isPlainObject(obj) ? obj : {}
+  }
   
 }
 
@@ -103,7 +140,7 @@ export function objectSize (obj) {
   
 export function ingestOptions (options, defaults) {
   
-  /* a recursive method to merge an object of options into an object of defaults 
+  /* a recursive method to merge a map of options into a map of defaults 
   * 
   * NOTE:
   * the ingestion process preserves the scope and type of the keys in defaults
@@ -141,7 +178,7 @@ export function ingestOptions (options, defaults) {
   * */
   
   // verify input is a map
-  options = ingestObject(options);
+  options = ingestMap(options);
 
   // define ingest map helper function
   function _ingest_map (opts, defs) {

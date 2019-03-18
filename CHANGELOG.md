@@ -1,5 +1,9 @@
 ## ChangeLog
 
+### 0.0.6 (2019.03.18)
+__[ADDED]__ ingestMap  
+__[UPDATED]__ ingest methods with path arg
+
 ### 0.0.5 (2018.10.28)
 __[ADDED]__ parseDiff, upsertValues  
 __[FIXED]__ deepCopy

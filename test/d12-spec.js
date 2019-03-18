@@ -16,7 +16,8 @@ let datatypes = {
   'the boolean': true,
   'the number': 12.12,
   'the undefined object': d12.onomatopoeia,
-  'the integer': 12
+  'the integer': 12,
+  'the reference error': {}
 };
 
 let options = {
@@ -70,10 +71,14 @@ function checkDatatypes(func, match, mismatch, type, title, alt=null){
     let name = JSON.stringify(value);
     if (key === 'the function'){
       name = 'd12.ingestObject'
+    } else if (key === 'the reference error'){
+      name = 'property of undefined'
     }
     let text = 'should return ' + key + ' ' + name + ' as';
     let outcome = mismatch;
-    if (type(value)){
+    if (key === 'the reference error'){
+      text += ' ' + title;
+    } else if (type(value)){
       text += ' it is';
       outcome = match
     } else {
@@ -82,14 +87,26 @@ function checkDatatypes(func, match, mismatch, type, title, alt=null){
     if (alt){
       it(text, function() { 
         try {
-          expect(func(value)).to.equal(outcome)
+          if (key === 'the reference error'){
+            expect(func(value, 'notamethod.notaproperty')).to.equal(outcome)
+          } else {
+            expect(func(value)).to.equal(outcome)
+          }
         } catch(e) {
-          expect(func(value)).to.equal(alt)
+          if (key === 'the reference error'){
+            expect(func(value, 'notamethod.notaproperty')).to.equal(alt)
+          } else {
+            expect(func(value)).to.equal(alt)
+          }
         }
       });
     } else {
       it(text, function () {
-        expect(func(value)).to.equal(outcome)
+        if (key === 'the reference error'){
+          expect(func(value, 'notamethod.notaproperty')).to.equal(outcome)
+        } else {
+          expect(func(value)).to.equal(outcome)
+        }
       })
     }
   }
@@ -127,10 +144,15 @@ describe('d12.js', function() {
     checkDatatypes(func, 12.12, 0, _.isNumber, 'zero', 12)
   });
   
+  describe('ingestMap()', function (){
+    let func = function(x){ return Object.keys(d12.ingestMap(x)).length };
+    checkDatatypes(func, 1, 0, _.isPlainObject, 'an empty map')
+  });
+  
   describe('objectSize()', function () {
     it('should return the length of a plain object', function () {
       expect(d12.objectSize(options)).to.be.a('number');
-      expect(d12.objectSize(datatypes)).to.equal(10);
+      expect(d12.objectSize(datatypes)).to.equal(11);
     });
   });
   
