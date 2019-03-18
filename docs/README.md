@@ -7,9 +7,9 @@ _A Platonic Solid for Ideal Data_
 **by [Collective Acuity](https://collectiveacuity.com)**
 
 <table>
-<tr><td>Downloads:</td><td>https://www.npmjs.com/package/d12</td></tr>
-<tr><td>Source:</td><td>https://github.com/collectiveacuity/d12</td><tr>
-<tr><td>Documentation:</td><td>https://collectiveacuity.github.io/d12</td><tr>
+<tr><td>Downloads:</td><td><a href="https://www.npmjs.com/package/d12">https://www.npmjs.com/package/d12</a></td></tr>
+<tr><td>Source:</td><td><a href="https://github.com/collectiveacuity/d12">https://github.com/collectiveacuity/d12</a></td><tr>
+<tr><td>Documentation:</td><td><a href="https://collectiveacuity.github.io/d12">https://collectiveacuity.github.io/d12</a></td><tr>
 </table>
 
 ## Intro
