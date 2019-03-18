@@ -61,25 +61,24 @@ console.log(ingestOptions(options, defaults))
 //      offline: false 
 //    }
 ```
-__parseDiff__ : to parse the differences between two objects
+__parseDiff__ : to compare the difference between two objects and output only the fields with altered values
 ```javascript
 import { parseDiff } from 'd12'
-let options = {
+let current = {
   token: 'abc',
   dt: 1123456789.012,
   timeout: '4000',
   extra: 'key'
 };
-let defaults = {
-  token: '',
+let previous = {
+  token: 'abc',
   dt: 0.0,
   timeout: 9000,
   method: 'header',
   offline: false
 };
-console.log(parseDiff(options, defaults))
+console.log(parseDiff(current, previous))
 // => {
-//      token: 'abc', 
 //      dt: 1123456789.012,
 //      timeout: '4000',
 //      extra: 'key',
