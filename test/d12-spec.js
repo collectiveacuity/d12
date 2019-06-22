@@ -249,6 +249,12 @@ describe('d12.js', function() {
     it('should report a prohibited error for "noreply@collectiveacuity.com"', function() {
       expect(d12.validateString('noreply@collectiveacuity.com', CRITERIA.email_address).prohibited).with.lengthOf(40);
     });
+    it('should report a prohibited error for "..reply@collectiveacuity.c', function() {
+      expect(d12.validateString('..reply@collectiveacuity.c', CRITERIA.email_address, {order:'must_not_contain,must_contain'}).prohibited).with.lengthOf(19);
+    });
+    it('should report a required error for "..reply@collectiveacuity.c', function() {
+      expect(d12.validateString('..reply@collectiveacuity.c', CRITERIA.email_address).required).with.lengthOf(29);
+    });
   });
   
   describe('validateData()', function() {

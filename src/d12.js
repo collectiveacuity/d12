@@ -396,10 +396,16 @@ export function upsertValues (upsert, existing) {
   
 }
 
-export function validateString (input, criteria) {
+export function validateString (input, criteria, options) {
 
   /* a method to test string input for valid criteria */
 
+  // ingest options
+  let opts = {
+    order: 'must_contain,equal_to,min_length,discrete_values,must_not_contain,max_length,excluded_values' // sequence of tests to run
+  };
+  const kwargs = ingestOptions(options, opts);
+  
   // ingest criteria
   let defaults = {
     must_contain: {},
@@ -411,82 +417,140 @@ export function validateString (input, criteria) {
     excluded_values: [ '' ]
   };
   const tests = ingestOptions(criteria, defaults);
-
+  
   // construct empty report
   let report = {
     required: '',
     prohibited: ''
   };
-
+  
   // test input for required regex
-  for (let key in tests.must_contain) {
-    let test_pattern = new RegExp(key, 'i');
-    if (!test_pattern.test(input)) {
-      report.required = tests.must_contain[key];
-      return report;
+  function mustContain() {
+    for (let key in tests.must_contain) {
+      let test_pattern = new RegExp(key, 'i');
+      if (!test_pattern.test(input)) {
+        return tests.must_contain[key];
+      }
     }
   }
   
   // test input for expected value
-  for (let key in tests.equal_to) {
-    if (key !== input) {
-      report.required = tests.equal_to[key];
-      return report;
-    }
-  }
-
-  // test input for min length
-  if (tests.min_length) {
-    if (input.length < tests.min_length) {
-      report.required = 'must contain at least ' + tests.min_length.toString() + ' characters';
-      return report;
+  function equalTo() {
+    for (let key in tests.equal_to) {
+      if (key !== input) {
+        return tests.equal_to[key];
+      }
     }
   }
   
-  // test input for discrete values
-  if (tests.discrete_values.length) {
-    if (tests.discrete_values.indexOf(input) === -1){
-      let words = joinWords(tests.discrete_values, {conjunction: 'or', prefix: '"', suffix: '"'});
-      report.required = 'may only be ' + words;
-      return report;
+  // test input for min length
+  function minLength() {
+    if (tests.min_length) {
+      if (input.length < tests.min_length) {
+        return 'must contain at least ' + tests.min_length.toString() + ' characters';
+      }
+    }
+  }
+    
+    // test input for discrete values
+  function discreteValues() {
+    if (tests.discrete_values.length) {
+      if (tests.discrete_values.indexOf(input) === -1) {
+        let words = joinWords(tests.discrete_values, {conjunction: 'or', prefix: '"', suffix: '"'});
+        return 'may only be ' + words;
+      }
     }
   }
   
   // test input for prohibited regex
-  for (let key in tests.must_not_contain) {
-    let test_pattern = new RegExp(key, 'i');
-    if (test_pattern.test(input)) {
-      report.prohibited = tests.must_not_contain[key];
-      return report;
-    }
-  }
-
-  // test input for max length
-  if (tests.max_length) {
-    if (input.length > tests.max_length) {
-      report.prohibited = 'cannot contain more than ' + tests.max_length.toString() + ' characters';
-      return report;
+  function mustNotContain() {
+    for (let key in tests.must_not_contain) {
+      let test_pattern = new RegExp(key, 'i');
+      if (test_pattern.test(input)) {
+        return tests.must_not_contain[key];
+      }
     }
   }
   
-  // test input for discrete values
-  if (tests.excluded_values.length) {
-    if (tests.excluded_values.indexOf(input) > -1){
-      let words = joinWords(tests.excluded_values, {conjunction: 'or', prefix: '"', suffix: '"'});
-      report.prohibited = 'cannot be ' + words;
-      return report;
+  // test input for max length
+  function maxLength() {
+    if (tests.max_length) {
+      if (input.length > tests.max_length) {
+        return 'cannot contain more than ' + tests.max_length.toString() + ' characters';
+      }
     }
   }
-
+    
+  // test input for discrete values
+  function excludedValues() {
+    if (tests.excluded_values.length) {
+      if (tests.excluded_values.indexOf(input) > -1) {
+        let words = joinWords(tests.excluded_values, {conjunction: 'or', prefix: '"', suffix: '"'});
+        return 'cannot be ' + words;
+      }
+    }
+  }
+  
+  // determine order of tests
+  let functions = {
+    must_contain: mustContain,
+    must_not_contain: mustNotContain,
+    equal_to: equalTo,
+    max_length: maxLength,
+    min_length: minLength,
+    discrete_values: discreteValues,
+    excluded_values: excludedValues
+  };
+  let types = {
+    must_contain: 'required',
+    must_not_contain: 'prohibited',
+    equal_to: 'required',
+    max_length: 'prohibited',
+    min_length: 'required',
+    discrete_values: 'required',
+    excluded_values: 'prohibited'
+  };
+  let order = kwargs.order.split(',');
+  let sequence = [];
+  let names = [];
+  for (let i = 0; i < order.length; i++){
+    let test = order[i];
+    if (test in functions){
+      names.push(test);
+      sequence.push(functions[test])
+    }
+  }
+  
+  // run tests
+  for (let i = 0; i < sequence.length; i++){
+    let result = sequence[i]();
+    if (result){
+      let name = names[i];
+      if (types[name] === 'required'){
+        report.required = result
+      } else if (types[name] === 'prohibited'){
+        report.prohibited = result
+      }
+      return report
+    }
+  }
+  
   // return clean report
   return report;
   
 }
 
-export function validateData (input, criteria) {
+export function validateData (input, criteria, options) {
   
   /* a method to test data against valid criteria */
   
+  // ingest options
+  let opts = {
+    order: 'must_contain,equal_to,min_length,discrete_values,must_not_contain,max_length,excluded_values' // sequence of tests to run
+  };
+  const kwargs = ingestOptions(options, opts);
+  
+  // define default output
   let report = {
     required: '',
     prohibited: ''
@@ -496,7 +560,7 @@ export function validateData (input, criteria) {
   
   if (datatype === 'string'){
     if (isString(input)){
-      return validateString(input, criteria)
+      return validateString(input, criteria, kwargs)
     } else {
       report.required = 'must be a string datatype.';
       return report;
