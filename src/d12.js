@@ -540,6 +540,14 @@ export function validateString (input, criteria, options) {
   
 }
 
+/**
+ * Tests data against valid criteria.
+ *
+ * @param {object} input an object of any datatype to validate
+ * @param {object} criteria a map containing validation criteria
+ * @param {object} options a map of options depending upon datatype
+ * @return {object} a map with required and prohibited error keys
+ */
 export function validateData (input, criteria, options) {
   
   /* a method to test data against valid criteria */

@@ -1,7 +1,7 @@
 ## ChangeLog
 
 ### 0.0.7 (2019.06.22)
-__[UPDATED]__ validateString with options arg for test order
+__[UPDATED]__ validateString with options arg for test order  
 __[UPDATED]__ validateData with options arg for test order
 
 ### 0.0.6 (2019.03.18)
