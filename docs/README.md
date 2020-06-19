@@ -101,6 +101,33 @@ console.log(validateString('password', criteria))
 //      prohibited: 'cannot be "12345678" or "password"'
 //    }
 ```
+__parseURL__ : to test validity of url syntax and parse components
+```javascript
+import { parseURL } from 'd12'
+
+let url = 'https://user:password@my.domain.com:5050/some/path/to/index.html?token=me#fragment'
+console.log(parseURL(url))
+// => {
+//      absolute: 'https://user:password@my.domain.com:5050',
+//      protocol: 'https',
+//      user: 'user',
+//      password: 'password',
+//      host: 'my.domain.com',
+//      port: 5050,
+//      path: '/some/path/to/index.html',
+//      query: 'token=me',
+//      fragment: 'fragment',
+//      errors: {},
+//      valid: true
+//    }  
+ 
+url = 'http://notavalidport.com:abc'
+console.log(parseURL(url).errors)
+// => {
+//      port: 'abc'
+//    }
+
+```
 
 ## Testing
 ```shell
