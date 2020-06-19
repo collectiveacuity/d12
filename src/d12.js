@@ -201,8 +201,10 @@ export function ingestOptions (options, defaults) {
           } else {
             output[key] = defs[key]
           }
-        } else if (isArray(defs[key])){
-          output[key] = []    
+        } else if (isArray(defs[key])) {
+          output[key] = []
+        } else if (isPlainObject(defs[key])) {
+          output[key] = _ingest_map({}, defs[key])  
         } else {
           output[key] = defs[key]
         }
@@ -543,10 +545,10 @@ export function validateString (input, criteria, options) {
 /**
  * Tests data against valid criteria.
  *
- * @param {object} input an object of any datatype to validate
- * @param {object} criteria a map containing validation criteria
- * @param {object} options a map of options for validation steps
- * @return {object} a map with required and prohibited error keys
+ * @param {object}  input     an object of any datatype to validate
+ * @param {object}  criteria  a map containing validation criteria
+ * @param {object}  options   a map of options for validation steps
+ * @return {object}           a map with required and prohibited error keys
  */
 export function validateData (input, criteria, options) {
   
@@ -577,5 +579,169 @@ export function validateData (input, criteria, options) {
   
   return report;
   
+}
+
+/**
+ * Tests string for valid url syntax and parses components of url.
+ *
+ * @param {string}  url   an url string to parse
+ * @return {object}       a map with components of url
+ */
+export function parseURL(url) {
+  
+  /* a method to parse the components of a url and validate syntax 
+  *   
+  *   return {
+  *     absolute: absolute,   // composition of protocol, user, password, host and port
+  *     protocol: protocol,   // string
+  *     user: user,           // string or undefined  **optional
+  *     password: password,   // string or undefined  **optional
+  *     host: host,           // string
+  *     port: port,           // integer or undefined **optional
+  *     path: path,           // string or undefined  **optional
+  *     query: query,         // string or undefined  **optional
+  *     fragment: fragment,   // string or undefined  **optional
+  *     errors: errors,       // map with components which have errors      
+  *     valid: valid          // boolean              ** true if url is valid, false if url is invalid
+  *   }
+  * */
+  
+  // define default properties
+  let errors = { }
+  let valid = true;
+  let absolute, userinfo, hostname, user, password;
+  let host, port, path, query, fragment, tail, schema;
+  
+  // match main elements of schema
+  if (isString(url)){
+    schema = url.match(/(^https?)\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  } else {
+    throw new TypeError('url arg must be a string')
+  }
+  let protocol = schema ? schema[1] : null;
+  let authority = schema ? schema[2] : null;
+  
+  // report error if not http or https
+  if (!protocol){
+    errors.protocol = url;
+  }
+  
+  if (authority){
+  
+    // parse userinfo and hostname
+    let segments = authority.match(/(.*)@(.*)/)
+    if (segments){
+      userinfo = segments[1]
+      hostname = segments[2]
+    } else {
+      hostname = authority
+    }
+    
+    // parse user and password
+    if (userinfo){
+      let permissions = userinfo.match(/(.*):(.*)/)
+      user = permissions ? permissions[1] : null;
+      password = permissions ? permissions[2] : null;
+      if (!permissions){
+        errors.userinfo = userinfo
+      }
+    }
+      
+    // parse host and port
+    let ports = hostname.match(/(.*):(.*)/)
+    host = ports ? ports[1] : hostname;
+    if (ports){
+      port = parseInt(ports[2]) ? parseInt(ports[2]) : null
+      if (!port){
+        errors.port = ports[2]
+      }
+    }
+  } else {
+    errors.authority = url;
+  }
+  
+  // validate top-level domain
+  if (host){
+    if (!host.match(/\./)){
+      errors.tld = host;
+    } else if (host.match(/^\./) || host.match(/\.$/)){
+      errors.host = host;
+    }
+  }
+  
+  // parse the tail
+  if (authority){
+    let head = '.*' + authority.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+    let regex = new RegExp(head)
+    tail = url.replace(regex, '')
+    // find indices for splitting tail components
+    if (tail){
+      let parts;
+      let question = tail.indexOf('?');
+      let pound = tail.indexOf('#');
+      if (question === -1 && pound === -1){
+        path = tail;
+      } else if (question === -1){
+        parts = tail.split('#')
+        path = parts[0]
+        fragment = parts[1]
+      } else if (pound === -1){
+        parts = tail.split('?')
+        path = parts[0]
+        query = parts[1]
+      // parse existence of both query and fragment  
+      } else {
+        let first = Math.min(question, pound)
+        let second = ''
+        if (first){
+          path = tail.slice(0,first)
+          second = tail.slice(first)
+        } else {
+          second = tail
+        }
+        if (question < pound){
+          parts = second.split('#')
+          query = parts[0].slice(1)
+          fragment = parts[1]
+        } else {
+          parts = second.split('?')
+          fragment = parts[0].slice(1)
+          query = parts[1]
+          errors.fragment = tail;
+        }
+        
+      }
+        
+      if (!path || path === '/'){
+        path = undefined
+      }
+    }
+  }
+  
+  // compose absolute address
+  if (protocol && authority){
+    absolute = `${protocol}://${authority}`
+  }
+  
+  // determine validity
+  if (Object.keys(errors).length){
+    valid = false
+  }
+  
+  // return report
+  return { 
+    absolute: absolute,
+    protocol: protocol, 
+    user: user, 
+    password: password, 
+    host: host, 
+    port: port, 
+    path: path,
+    query: query,
+    fragment: fragment,
+    errors: errors, 
+    valid: valid 
+  }
+
 }
 

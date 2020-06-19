@@ -1,6 +1,6 @@
 {
   "name": "d12",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A Platonic Solid for Ideal Data",
   "author": "Collective Acuity <support@collectiveacuity.com>",
   "contributors": [
@@ -17,7 +17,7 @@
   },
   "homepage": "https://collectiveacuity.github.io/d12",
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.15"
   },
   "license": "MIT",
   "main": "dist/d12.js",

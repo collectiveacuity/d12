@@ -1,5 +1,9 @@
 ## ChangeLog
 
+### 0.0.8 (2020.06.19)
+__[ADDED]__ parseURL  
+__[FIXED]__ ingestOptions
+
 ### 0.0.7 (2019.06.22)
 __[UPDATED]__ validateString with options arg for test order  
 __[UPDATED]__ validateData with options arg for test order

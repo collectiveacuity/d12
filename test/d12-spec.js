@@ -42,13 +42,17 @@ let defaults = {
   method: 'header',
   offline: false,
   top: {
-    nested: 'you'
+    nested: 'you',
+    list: [ '' ]
   },
   func: d12.ingestObject,
   d: new Date(),
   list: ['string'],
   lists: [ [ ] ],
-  empty: [ {} ]
+  empty: [ {} ],
+  nested: {
+    list: [ '' ]
+  }
 };
 
 let alterations = {
@@ -173,6 +177,7 @@ describe('d12.js', function() {
     });
     it('should recursively explore plain objects', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('top').to.have.property('nested').to.equal('me')
+      expect(d12.ingestOptions(options, defaults)).to.have.property('nested').to.have.property('list').with.lengthOf(0)
     });
     it('should recursively explore arrays', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('lists').with.lengthOf(2)
@@ -265,5 +270,122 @@ describe('d12.js', function() {
       expect(d12.validateData('support@collectiveacuity.com', CRITERIA.email_address).prohibited).to.equal('')
     });
   });
+  
+  describe('parseURL()', function () {
+    it('should throw an error if url input is not a string', function() {
+      expect(function() { d12.parseURL(['http://notastring.butalist']) }).to.throw('url')
+    })
+    it('should return errors for an empty url', function() {
+      const parsed = d12.parseURL('')
+      expect(parsed).to.have.property('host').to.be.undefined;
+      expect(parsed).to.have.property('valid').to.equal(false);
+      expect(parsed).to.have.property('errors').to.have.property('protocol').to.be.a('string').with.lengthOf(0)
+    });
+    it('should parse https://www.google.com', function() {
+      const parsed = d12.parseURL('https://www.google.com')
+      expect(parsed).to.have.property('host').to.be.a('string');
+      expect(parsed).to.have.property('protocol').to.equal('https');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse ip address in http://8.8.8.8', function() {
+      const parsed = d12.parseURL('http://8.8.8.8')
+      expect(parsed).to.have.property('host').to.be.a('string');
+      expect(parsed.host).to.match(/\d+/i);
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should report tld errors for https://google', function() {
+      const parsed = d12.parseURL('https://google')
+      expect(parsed).to.have.property('errors').to.have.property('tld');
+      expect(parsed).to.have.property('valid').to.equal(false);
+    });
+    it('should report host errors for https://google.com.', function() {
+      const parsed = d12.parseURL('https://google.com.')
+      expect(parsed).to.have.property('errors').to.have.property('host');
+      expect(parsed).to.have.property('valid').to.equal(false);
+    });
+    it('should parse port in http://8.8.8.8:80', function() {
+      const parsed = d12.parseURL('http://8.8.8.8:80')
+      expect(parsed).to.have.property('port').to.be.equal(80);
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse user in https://user:password@www.google.com', function() {
+      const parsed = d12.parseURL('https://user:password@www.google.com')
+      expect(parsed).to.have.property('user').to.equal('user');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should report userinfo errors for https://user@www.google.com', function() {
+      const parsed = d12.parseURL('https://user@www.google.com')
+      expect(parsed).to.have.property('errors').to.have.property('userinfo');
+      expect(parsed).to.have.property('valid').to.equal(false);
+    });
+    it('should report port errors for https://www.google.com:abc', function() {
+      const parsed = d12.parseURL('https://www.google.com:abc')
+      expect(parsed).to.have.property('errors').to.have.property('port');
+      expect(parsed).to.have.property('valid').to.equal(false);
+    });
+    it('should parse password for https://user:password@www.google.com:443', function() {
+      const parsed = d12.parseURL('https://user:password@www.google.com:443')
+      expect(parsed).to.have.property('password').to.equal('password');
+      expect(parsed).to.have.property('path').to.be.undefined;
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse no path in https://user:password@www.google.com/', function() {
+      const parsed = d12.parseURL('https://user:password@www.google.com/')
+      expect(parsed).to.have.property('path').to.be.undefined;
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse path in https://www.google.com/some/path', function() {
+      const parsed = d12.parseURL('https://www.google.com/some/path')
+      expect(parsed).to.have.property('path').to.equal('/some/path');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse query in https://www.google.com?token=me', function() {
+      const parsed = d12.parseURL('https://www.google.com?token=me')
+      expect(parsed).to.have.property('query').to.equal('token=me');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse fragment in https://www.google.com#fragment', function() {
+      const parsed = d12.parseURL('https://www.google.com#fragment')
+      expect(parsed).to.have.property('fragment').to.equal('fragment');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse no path in https://www.google.com/#fragment', function() {
+      const parsed = d12.parseURL('https://www.google.com#fragment')
+      expect(parsed).to.have.property('fragment').to.equal('fragment');
+      expect(parsed).to.have.property('valid').to.equal(true);
+      expect(parsed).to.have.property('path').to.be.undefined;
+    });
+    it('should parse query and fragment in https://www.google.com?token=me#fragment', function() {
+      const parsed = d12.parseURL('https://www.google.com?token=me#fragment')
+      expect(parsed).to.have.property('fragment').to.equal('fragment');
+      expect(parsed).to.have.property('query').to.equal('token=me');
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should parse no path in https://www.google.com/?token=me#fragment', function() {
+      const parsed = d12.parseURL('https://www.google.com/?token=me#fragment')
+      expect(parsed).to.have.property('fragment').to.equal('fragment');
+      expect(parsed).to.have.property('query').to.equal('token=me');
+      expect(parsed).to.have.property('valid').to.equal(true);
+      expect(parsed).to.have.property('path').to.be.undefined;
+    });
+    it('should parse everything in https://u:p@www.google.com:443/path/to/index.html?t=me#frag', function() {
+      const parsed = d12.parseURL('https://u:p@www.google.com:443/path/to/index.html?t=me#frag')
+      expect(parsed).to.have.property('protocol').to.not.be.undefined;
+      expect(parsed).to.have.property('user').to.not.be.undefined;
+      expect(parsed).to.have.property('password').to.not.be.undefined;
+      expect(parsed).to.have.property('host').to.not.be.undefined;
+      expect(parsed).to.have.property('port').to.not.be.undefined;
+      expect(parsed).to.have.property('path').to.not.be.undefined;
+      expect(parsed).to.have.property('query').to.not.be.undefined;
+      expect(parsed).to.have.property('absolute').to.equal('https://u:p@www.google.com:443')
+      expect(parsed).to.have.property('fragment').to.not.be.undefined;
+      expect(parsed).to.have.property('valid').to.equal(true);
+    });
+    it('should report fragment errors for https://u:p@www.google.com:443/path/to/index.html#frag?t=me', function() {
+      const parsed = d12.parseURL('https://u:p@www.google.com:443/path/to/index.html#frag?t=me')
+      expect(parsed).to.have.property('errors').to.have.property('fragment');
+      expect(parsed).to.have.property('valid').to.equal(false);
+    });
+  })
   
 });
