@@ -1,5 +1,8 @@
 ## ChangeLog
 
+### 0.0.9 (???)
+__[UPDATED]__ parseURL with scheme property
+
 ### 0.0.8 (2020.06.19)
 __[ADDED]__ parseURL  
 __[FIXED]__ ingestOptions

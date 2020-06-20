@@ -731,6 +731,7 @@ export function parseURL(url) {
   // return report
   return { 
     absolute: absolute,
+    scheme: protocol,
     protocol: protocol, 
     user: user, 
     password: password, 
