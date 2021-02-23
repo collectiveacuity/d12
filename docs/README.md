@@ -109,7 +109,7 @@ let url = 'https://user:password@my.domain.com:5050/some/path/to/index.html?toke
 console.log(parseURL(url))
 // => {
 //      absolute: 'https://user:password@my.domain.com:5050',
-//      protocol: 'https',
+//      scheme: 'https',
 //      user: 'user',
 //      password: 'password',
 //      host: 'my.domain.com',

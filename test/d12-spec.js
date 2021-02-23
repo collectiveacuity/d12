@@ -32,7 +32,8 @@ let options = {
   d: new Date(),
   list: [ 'me', 'you', true ],
   lists: [ [ 'me', 'you' ], ['us', 'them'] ],
-  empty: [ { 'us': 'them' } ]
+  empty: [ { 'us': 'them' } ],
+  nothing: 'something'
 };
 
 let defaults = {
@@ -52,7 +53,8 @@ let defaults = {
   empty: [ {} ],
   nested: {
     list: [ '' ]
-  }
+  },
+  nothing: null
 };
 
 let alterations = {
@@ -172,6 +174,9 @@ describe('d12.js', function() {
       expect(d12.ingestOptions(options, defaults)).to.have.property('func').to.be.a('function');
       expect(d12.ingestOptions(options, defaults)).to.have.property('d').to.be.a('date')
     });
+    it('should return the option value when the default datatype is null', function(){
+      expect(d12.ingestOptions(options, defaults)).to.have.property('nothing').to.equal('something')
+    });
     it('should only add items to a sub-array which match the default datatype', function(){
       expect(d12.ingestOptions(options, defaults)).to.have.property('list').with.lengthOf(2)
     });
@@ -284,7 +289,7 @@ describe('d12.js', function() {
     it('should parse https://www.google.com', function() {
       const parsed = d12.parseURL('https://www.google.com')
       expect(parsed).to.have.property('host').to.be.a('string');
-      expect(parsed).to.have.property('protocol').to.equal('https');
+      expect(parsed).to.have.property('scheme').to.equal('https');
       expect(parsed).to.have.property('valid').to.equal(true);
     });
     it('should parse ip address in http://8.8.8.8', function() {
@@ -370,7 +375,7 @@ describe('d12.js', function() {
     });
     it('should parse everything in https://u:p@www.google.com:443/path/to/index.html?t=me#frag', function() {
       const parsed = d12.parseURL('https://u:p@www.google.com:443/path/to/index.html?t=me#frag')
-      expect(parsed).to.have.property('protocol').to.not.be.undefined;
+      expect(parsed).to.have.property('scheme').to.not.be.undefined;
       expect(parsed).to.have.property('user').to.not.be.undefined;
       expect(parsed).to.have.property('password').to.not.be.undefined;
       expect(parsed).to.have.property('host').to.not.be.undefined;

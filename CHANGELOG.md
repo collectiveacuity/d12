@@ -1,7 +1,9 @@
 ## ChangeLog
 
-### 0.0.9 (???)
-__[UPDATED]__ parseURL with scheme property
+### 0.0.9 (2021.02.23)
+__[UPDATED]__ ingestOptions to accept any datatype for null defaults  
+__[UPDATED]__ parseURL with scheme property  
+__[DEPRECATED]__ protocol property of parseURL
 
 ### 0.0.8 (2020.06.19)
 __[ADDED]__ parseURL  

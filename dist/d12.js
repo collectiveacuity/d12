@@ -3,8 +3,8 @@
 * @description A Platonic Solid for Ideal Data
 * @author rcj1492
 * @license MIT
-* @version 0.0.7
-* @copyright 2018-2019 Collective Acuity 
+* @version 0.0.9
+* @copyright 2018-2021 Collective Acuity 
 * @email support@collectiveacuity.com
 * @url https://github.com/collectiveacuity/d12
 */
@@ -182,6 +182,14 @@ function objectSize(obj) {
   /* a method to determine number of keys in a plain object */
   return Object.keys(ingestObject(obj)).length;
 }
+/**
+ * Recursively merges a map of options into a map of defaults
+ *
+ * @param {object}  options   a map of key-value pairs of any type and depth
+ * @param {object}  defaults  a map of key-value pairs of any type and depth
+ * @return {object}           a map of merged key-values from options and defaults
+ */
+
 
 function ingestOptions(options, defaults) {
   /* a recursive method to merge a map of options into a map of defaults 
@@ -241,6 +249,8 @@ function ingestOptions(options, defaults) {
             } else {
               output[key] = opts[key];
             }
+          } else if (defs[key] === null) {
+            output[key] = opts[key];
           } else {
             output[key] = defs[key];
           }
@@ -436,6 +446,15 @@ function upsertValues(upsert, existing) {
 
   return maps.updated;
 }
+/**
+ * Tests string against valid criteria.
+ *
+ * @param {object}  input     a string to validate
+ * @param {object}  criteria  a map containing validation criteria
+ * @param {object}  options   a map of options for validation steps
+ * @return {object}           a map with required and prohibited error keys
+ */
+
 
 function validateString(input, criteria, options) {
   /* a method to test string input for valid criteria */
@@ -639,7 +658,7 @@ function parseURL(url) {
   *   
   *   return {
   *     absolute: absolute,   // composition of protocol, user, password, host and port
-  *     protocol: protocol,   // string
+  *     scheme: scheme,       // string
   *     user: user,           // string or undefined  **optional
   *     password: password,   // string or undefined  **optional
   *     host: host,           // string
@@ -779,7 +798,7 @@ function parseURL(url) {
 
   return {
     absolute: absolute,
-    protocol: protocol,
+    scheme: protocol,
     user: user,
     password: password,
     host: host,

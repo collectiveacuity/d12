@@ -137,7 +137,14 @@ export function objectSize (obj) {
   return Object.keys(ingestObject(obj)).length;
   
 }
-  
+
+/**
+ * Recursively merges a map of options into a map of defaults
+ *
+ * @param {object}  options   a map of key-value pairs of any type and depth
+ * @param {object}  defaults  a map of key-value pairs of any type and depth
+ * @return {object}           a map of merged key-values from options and defaults
+ */  
 export function ingestOptions (options, defaults) {
   
   /* a recursive method to merge a map of options into a map of defaults 
@@ -198,6 +205,8 @@ export function ingestOptions (options, defaults) {
             } else {
               output[key] = opts[key]
             }
+          } else if (defs[key] === null) {
+            output[key] = opts[key]
           } else {
             output[key] = defs[key]
           }
@@ -398,6 +407,14 @@ export function upsertValues (upsert, existing) {
   
 }
 
+/**
+ * Tests string against valid criteria.
+ *
+ * @param {object}  input     a string to validate
+ * @param {object}  criteria  a map containing validation criteria
+ * @param {object}  options   a map of options for validation steps
+ * @return {object}           a map with required and prohibited error keys
+ */
 export function validateString (input, criteria, options) {
 
   /* a method to test string input for valid criteria */
@@ -593,7 +610,7 @@ export function parseURL(url) {
   *   
   *   return {
   *     absolute: absolute,   // composition of protocol, user, password, host and port
-  *     protocol: protocol,   // string
+  *     scheme: scheme,       // string
   *     user: user,           // string or undefined  **optional
   *     password: password,   // string or undefined  **optional
   *     host: host,           // string
@@ -732,7 +749,6 @@ export function parseURL(url) {
   return { 
     absolute: absolute,
     scheme: protocol,
-    protocol: protocol, 
     user: user, 
     password: password, 
     host: host, 
