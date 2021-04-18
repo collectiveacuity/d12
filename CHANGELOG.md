@@ -1,5 +1,8 @@
 ## ChangeLog
 
+### 0.0.10 (2021.04.18)
+__[FIXED]__ ingestOptions handling of empty default array
+
 ### 0.0.9 (2021.02.23)
 __[UPDATED]__ ingestOptions to accept any datatype for null defaults  
 __[UPDATED]__ parseURL with scheme property  

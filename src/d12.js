@@ -229,7 +229,8 @@ export function ingestOptions (options, defaults) {
     try { item = defs[0] } catch (e) {}
     for (let i = 0; i < opts.length; i++) {
       if (item == null) {
-        output.push(opts)
+        output.push(...opts)
+        break
       } else {
         if (typeof (opts[i]) === typeof (item)) {
           if (isArray(opts[i])) {
